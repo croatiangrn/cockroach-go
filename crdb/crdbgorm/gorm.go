@@ -17,9 +17,8 @@ package crdbgorm
 import (
 	"context"
 	"database/sql"
-
 	"github.com/cockroachdb/cockroach-go/v2/crdb"
-	"gorm.io/gorm"
+	"github.com/jinzhu/gorm"
 )
 
 // ExecuteTx runs fn inside a transaction and retries it as needed. On
@@ -30,7 +29,7 @@ import (
 func ExecuteTx(
 	ctx context.Context, db *gorm.DB, opts *sql.TxOptions, fn func(tx *gorm.DB) error,
 ) error {
-	tx := db.WithContext(ctx).Begin(opts)
+	tx := db.BeginTx(ctx, opts)
 	if db.Error != nil {
 		return db.Error
 	}
